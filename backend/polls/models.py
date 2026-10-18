@@ -1,4 +1,5 @@
 
+import uuid
 from django.db import models
 
 #define um metodo para guardar votacoes
@@ -42,6 +43,10 @@ class Option(models.Model):
 
 #representa um voto guardado na base de dados
 class Vote(models.Model):
+    # A votação é necessária para impedir o mesmo token em opções diferentes.
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE, related_name="votes")
+    token = models.UUIDField(default=uuid.uuid4)
+
     option = models.ForeignKey(
         Option,
         on_delete=models.CASCADE,
@@ -49,6 +54,9 @@ class Vote(models.Model):
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["poll", "token"], name="unique_vote_per_poll_token")]
 
     def __str__(self):
         return f"Voto na opção {self.option_id}"
