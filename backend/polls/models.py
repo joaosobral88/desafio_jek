@@ -24,20 +24,23 @@ class Poll(models.Model):
     def __str__(self):
         return self.question
 
-
+#criar tabela paras as opcoes
 class Option(models.Model):
+#criar ligação entre a tabela poll
     poll = models.ForeignKey(
         Poll,
+#se a votacao for eliminada as opcoes tambem sao
         on_delete=models.CASCADE,
         related_name="options"
     )
+#cada opção pertence a uma votação da tab poll
 
     text = models.CharField(max_length=255)
 
     def __str__(self):
         return self.text
 
-
+#representa um voto guardado na base de dados
 class Vote(models.Model):
     option = models.ForeignKey(
         Option,
