@@ -44,6 +44,7 @@ class Option(models.Model):
 #representa um voto guardado na base de dados
 class Vote(models.Model):
     # A votação é necessária para impedir o mesmo token em opções diferentes.
+    #isto impede por exemplo pessoa 1 vota na opcao 1 e na opcao 2
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE, related_name="votes")
     token = models.UUIDField(default=uuid.uuid4)
 
