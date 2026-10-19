@@ -32,6 +32,7 @@ class Option(models.Model):
         Poll,
 #se a votacao for eliminada as opcoes tambem sao
         on_delete=models.CASCADE,
+        
         related_name="options"
     )
 #cada opção pertence a uma votação da tab poll
