@@ -6,11 +6,11 @@ from rest_framework.response import Response
 from .models import Poll, Vote
 from .serializers import CreatePollSerializer, PollSerializer, StatusSerializer, VoteSerializer
 
-
+#devolve votacoes para o publico poder ver
 def public_polls():
     return Poll.objects.exclude(status=Poll.Status.DRAFT)
 
-
+#vai buscar todas as votacoes com uma so consulta
 @api_view(["GET", "POST"])
 def host_polls(request):
     if request.method == "GET":
@@ -20,7 +20,7 @@ def host_polls(request):
     serializer.is_valid(raise_exception=True)
     return Response(PollSerializer(serializer.save()).data, status=201)
 
-
+#nao inclui rascunhos
 @api_view(["GET"])
 def public_poll_list(request):
     polls = public_polls().prefetch_related("options").order_by("-created_at")
@@ -29,10 +29,13 @@ def public_poll_list(request):
 
 @api_view(["PATCH"])
 def change_status(request, poll_id):
+    #valida que tem um status
     serializer = StatusSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     new_status = serializer.validated_data["status"]
+    #vai buscar a votacao, se nao existir da 404
     poll = get_object_or_404(Poll, pk=poll_id)
+    #tabela das transicoes permitidas
     next_status = {Poll.Status.DRAFT: Poll.Status.OPEN, Poll.Status.OPEN: Poll.Status.CLOSED}
     if next_status.get(poll.status) != new_status:
         return Response({"detail": "Só pode abrir um rascunho ou fechar uma votação aberta."}, status=400)
@@ -42,7 +45,7 @@ def change_status(request, poll_id):
     poll.refresh_from_db()
     return Response(PollSerializer(poll).data)
 
-
+#registar o voto de um participante
 @api_view(["POST"])
 def vote(request, poll_id):
     serializer = VoteSerializer(data=request.data)
@@ -64,7 +67,7 @@ def vote(request, poll_id):
         return Response({"detail": "Já votou nesta votação com este navegador."}, status=409)
     return Response({"detail": "O seu voto foi registado. Obrigado por participar!"}, status=201)
 
-
+#mostrar os resultados ao publico
 def poll_results(poll):
     options = list(poll.options.annotate(count=Count("votes")).order_by("id"))
     total = sum(option.count for option in options)
@@ -77,7 +80,7 @@ def poll_results(poll):
         ],
     }
 
-
+#mostrar os resultados ao anfitriao
 @api_view(["GET"])
 def host_results(request, poll_id):
     return Response(poll_results(get_object_or_404(Poll, pk=poll_id)))

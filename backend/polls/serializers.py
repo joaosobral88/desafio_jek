@@ -16,7 +16,6 @@ class OptionSerializer(serializers.ModelSerializer):
         model = Option
         fields = ["id", "text"]
 
-
 class PollSerializer(serializers.ModelSerializer):
     options = OptionSerializer(many=True, read_only=True)
 
