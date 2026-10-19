@@ -202,3 +202,6 @@ e `npm.cmd run build` concluído com sucesso.
 - Não há edição/eliminação de votações, reabertura, autenticação, Docker ou funcionalidades do Nível 3.
 - A configuração é de desenvolvimento local (`DEBUG=True` e chave de desenvolvimento),
   não de publicação em produção. Não foram adicionadas dependências de serviços externos.
+
+
+Com mais tempo, implementaria autenticação para proteger o painel do anfitrião, um sistema mais robusto de identificação dos participantes e atualização automática dos resultados através de WebSockets ou Server-Sent Events.
