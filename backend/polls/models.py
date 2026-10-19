@@ -32,7 +32,7 @@ class Option(models.Model):
         Poll,
 #se a votacao for eliminada as opcoes tambem sao
         on_delete=models.CASCADE,
-        
+
         related_name="options"
     )
 #cada opção pertence a uma votação da tab poll
@@ -45,8 +45,9 @@ class Option(models.Model):
 #representa um voto guardado na base de dados
 class Vote(models.Model):
     # A votação é necessária para impedir o mesmo token em opções diferentes.
-    #isto impede por exemplo pessoa 1 vota na opcao 1 e na opcao 2
+    #tem poll para que seja possivel criar a restricao de 1 voto
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE, related_name="votes")
+    #identificador do navegador de quem votou
     token = models.UUIDField(default=uuid.uuid4)
 
     option = models.ForeignKey(
@@ -56,7 +57,7 @@ class Vote(models.Model):
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
-
+#a base de dados recusa duas linhas com o mesmo par ou seja o mesmo token nao vota duas vezes na mesma votacao
     class Meta:
         constraints = [models.UniqueConstraint(fields=["poll", "token"], name="unique_vote_per_poll_token")]
 
