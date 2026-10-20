@@ -1,3 +1,5 @@
+//componentes react que criam a interfade, como botoes, votacaoes e resultados
+
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { api, voterToken } from "./api";
