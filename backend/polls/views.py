@@ -79,7 +79,6 @@ def poll_results(poll):
             for option in options
         ],
     }
-
 #mostrar os resultados ao anfitriao
 @api_view(["GET"])
 def host_results(request, poll_id):
