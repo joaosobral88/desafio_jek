@@ -205,3 +205,18 @@ e `npm.cmd run build` concluído com sucesso.
 
 
 Com mais tempo, implementaria autenticação para proteger o painel do anfitrião, um sistema mais robusto de identificação dos participantes e atualização automática dos resultados através de WebSockets ou Server-Sent Events.
+
+Para dar Run:
+1
+cd backend
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\venv\Scripts\Activate.ps1
+python manage.py migrate
+python manage.py runserver
+
+2
+cd frontend
+npm.cmd install
+npm.cmd run dev
+
+http://localhost:5173/
